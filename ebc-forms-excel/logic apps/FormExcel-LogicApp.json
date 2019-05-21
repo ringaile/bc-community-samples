@@ -1,0 +1,96 @@
+{
+    "$connections": {
+        "value": {
+            "blockchainethereum": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/blockchainethereum-1",
+                "connectionName": "blockchainethereum-1",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/blockchainethereum"
+            },
+            "microsoftforms": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/microsoftforms",
+                "connectionName": "microsoftforms",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/microsoftforms"
+            }
+        }
+    },
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "For_each": {
+                "actions": {
+                    "Execute_smart_contract_function_(incurring_gas_cost)": {
+                        "inputs": {
+                            "body": {
+                                "amount": "@body('Get_response_details')?['rf9e02c0a31ab4335848ebcfbfe66c047']",
+                                "category": "@body('Get_response_details')?['rcb3236a5c79f44c98f92a8c8140796b8']",
+                                "date": "@body('Get_response_details')?['rc6dac09bb1d045f3a37757fb09c40b53']"
+                            },
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['blockchainethereum']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/contract/functions/@{encodeURIComponent(encodeURIComponent('addExpenseLog'))}/execute",
+                            "queries": {
+                                "abi": "[\n\t{\n\t\t\"constant\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"date\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"amount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"addExpenseLog\",\n\t\t\"outputs\": [],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"nonpayable\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"anonymous\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"expenseLogId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"date\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"amount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"ExpenseLogAdded\",\n\t\t\"type\": \"event\"\n\t},\n\t{\n\t\t\"anonymous\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"totalAmount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"ExpenseTotalsUpdated\",\n\t\t\"type\": \"event\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"ExpenseLogs\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"Id\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"CategoryHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"Date\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"Amount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [],\n\t\t\"name\": \"getCount\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"getTotalAmount\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"Totals\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t}\n]",
+                                "contractAddress": "0xc410b7015af5e562e5108c2ab2bd03de48f272b7"
+                            }
+                        },
+                        "runAfter": {
+                            "Get_response_details": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "ApiConnection"
+                    },
+                    "Get_response_details": {
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['microsoftforms']['connectionId']"
+                                }
+                            },
+                            "method": "get",
+                            "path": "/formapi/api/forms('@{encodeURIComponent('LKtUoszetEi7u0Gj14MFu4k0f71m5RhMrDXVzbOrZBJUOU9KRDRYRzMxT0g0VFFTVzdESkE3WFBRSC4u')}')/responses",
+                            "queries": {
+                                "response_id": "@items('For_each')?['resourceData']?['responseId']"
+                            }
+                        },
+                        "runAfter": {},
+                        "type": "ApiConnection"
+                    }
+                },
+                "foreach": "@triggerBody()?['value']",
+                "runAfter": {},
+                "type": "Foreach"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "When_a_new_response_is_submitted": {
+                "inputs": {
+                    "body": {
+                        "eventType": "responseAdded",
+                        "notificationUrl": "@{listCallbackUrl()}",
+                        "source": "ms-connector"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['microsoftforms']['connectionId']"
+                        }
+                    },
+                    "path": "/formapi/api/forms/@{encodeURIComponent('LKtUoszetEi7u0Gj14MFu4k0f71m5RhMrDXVzbOrZBJUOU9KRDRYRzMxT0g0VFFTVzdESkE3WFBRSC4u')}/webhooks"
+                },
+                "type": "ApiConnectionWebhook"
+            }
+        }
+    }
+}

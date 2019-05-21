@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "java",
+    "ETH_JSON_RPC": "FIXME",
+    "VAULT_ID": "FIXME",
+    "KEYSTORE_SECRET_ID": "FIXME",
+    "PASSPHRASE_SECRET_ID": "FIXME"
+  }
+}

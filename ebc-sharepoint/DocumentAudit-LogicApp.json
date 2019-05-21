@@ -1,0 +1,138 @@
+{
+    "$connections": {
+        "value": {
+            "blockchainethereum": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/blockchainethereum-1",
+                "connectionName": "blockchainethereum-1",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/blockchainethereum"
+            },
+            "sharepointonline": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/sharepointonline",
+                "connectionName": "sharepointonline",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/sharepointonline"
+            }
+        }
+    },
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Execute_smart_contract_function_(incurring_gas_cost)": {
+                "inputs": {
+                    "body": {
+                        "documentHash": "@{body('Hash_File_Content')}",
+                        "documentId": "@{triggerBody()?['ID']}",
+                        "metadataHash": "@{body('Hash_File_Metadata')}",
+                        "modifiedByHash": "@{body('Hash_Modified_By_Email')}",
+                        "timestamp": "@{ticks(triggerBody()?['Modified'])}"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['blockchainethereum']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/contract/functions/@{encodeURIComponent(encodeURIComponent('addLog'))}/execute",
+                    "queries": {
+                        "abi": "[\n\t{\n\t\t\"constant\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"documentId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"documentHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"metadataHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"modifiedByHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"timestamp\",\n\t\t\t\t\"type\": \"int256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"addLog\",\n\t\t\"outputs\": [],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"nonpayable\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"anonymous\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"id\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"documentId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"documentHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"metadataHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"modifiedByHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"change\",\n\t\t\t\t\"type\": \"uint8\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"timestamp\",\n\t\t\t\t\"type\": \"int256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"LogAdded\",\n\t\t\"type\": \"event\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"documents\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"bool\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [],\n\t\t\"name\": \"getCount\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"logs\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"Id\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"DocumentId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"DocumentHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"MetadataHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"ModifiedByHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"Change\",\n\t\t\t\t\"type\": \"uint8\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"Timestamp\",\n\t\t\t\t\"type\": \"int256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t}\n]",
+                        "contractAddress": "0xa37aaeda6a0d5650d566801bd321558db9496fb6"
+                    }
+                },
+                "runAfter": {
+                    "Hash_Modified_By_Email": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Get_file_content": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['sharepointonline']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://innovateit.sharepoint.com/sites/AuditTrace'))}/files/@{encodeURIComponent(triggerBody()?['{Identifier}'])}/content",
+                    "queries": {
+                        "inferContentType": true
+                    }
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
+            },
+            "Hash_File_Content": {
+                "inputs": {
+                    "body": "@body('Get_file_content').$content",
+                    "function": {
+                        "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/sites/hackaton19/functions/HttpTrigger1"
+                    }
+                },
+                "runAfter": {
+                    "Get_file_content": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            },
+            "Hash_File_Metadata": {
+                "inputs": {
+                    "body": {
+                        "id": "@triggerBody()?['{Identifier}']",
+                        "name": "@triggerBody()?['{FilenameWithExtension}']",
+                        "path": "@triggerBody()?['{Path}']"
+                    },
+                    "function": {
+                        "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/sites/hackaton19/functions/HttpTrigger1"
+                    }
+                },
+                "runAfter": {
+                    "Hash_File_Content": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            },
+            "Hash_Modified_By_Email": {
+                "inputs": {
+                    "body": "@triggerBody()?['Editor']?['Email']",
+                    "function": {
+                        "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/sites/hackaton19/functions/HttpTrigger1"
+                    }
+                },
+                "runAfter": {
+                    "Hash_File_Metadata": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "When_a_file_is_created_or_modified_(properties_only)": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['sharepointonline']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://innovateit.sharepoint.com/sites/AuditTrace'))}/tables/@{encodeURIComponent(encodeURIComponent('97de545a-5494-42ab-ad50-5092cac51f0e'))}/onupdatedfileitems"
+                },
+                "recurrence": {
+                    "frequency": "Minute",
+                    "interval": 3
+                },
+                "splitOn": "@triggerBody()?['value']",
+                "type": "ApiConnection"
+            }
+        }
+    }
+}

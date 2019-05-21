@@ -1,0 +1,13 @@
+# Minimum packages for azure functions
+azure-functions
+azure-functions-worker
+grpcio
+grpcio-tools
+protobuf
+six
+# Additional packages
+web3
+wheel
+azure-common
+azure-keyvault
+azure-cli-core

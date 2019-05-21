@@ -1,0 +1,152 @@
+{
+    "$connections": {
+        "value": {
+            "blockchainethereum": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/blockchainethereum-1",
+                "connectionName": "blockchainethereum-1",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/blockchainethereum"
+            },
+            "cognitiveservicescomputervision": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/cognitiveservicescomputervision",
+                "connectionName": "cognitiveservicescomputervision",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/cognitiveservicescomputervision"
+            },
+            "sharepointonline": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/sharepointonline",
+                "connectionName": "sharepointonline",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/sharepointonline"
+            }
+        }
+    },
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Execute_smart_contract_function_(incurring_gas_cost)": {
+                "inputs": {
+                    "body": {
+                        "documentHash": "@{body('Hash_file_content')}",
+                        "metadataHash": "@{body('Hash_metadata')}",
+                        "textHash": "@{body('Hash_detected_text')}"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['blockchainethereum']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/contract/functions/@{encodeURIComponent(encodeURIComponent('addDocument'))}/execute",
+                    "queries": {
+                        "abi": "[\n\t{\n\t\t\"constant\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"documentHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"textHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"metadataHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"addDocument\",\n\t\t\"outputs\": [],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"nonpayable\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"anonymous\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"documentId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"owner\",\n\t\t\t\t\"type\": \"address\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"documentHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"textHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"metadataHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"DocumentAdded\",\n\t\t\"type\": \"event\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"documents\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"Id\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"Owner\",\n\t\t\t\t\"type\": \"address\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"DocumentHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"TextHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"MetadataHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [],\n\t\t\"name\": \"getCount\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"documentId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"getDocumentHash\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"documentId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"getMetadataHash\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"documentId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"getTextHash\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t}\n]",
+                        "contractAddress": "0x99c4c534051a8ed523ada5036d942315d38e5978"
+                    }
+                },
+                "runAfter": {
+                    "Hash_metadata": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Hash_detected_text": {
+                "inputs": {
+                    "body": "@body('Optical_Character_Recognition_(OCR)_to_Text')?['text']",
+                    "function": {
+                        "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/sites/hackaton19/functions/HttpTrigger1"
+                    }
+                },
+                "runAfter": {
+                    "Hash_file_content": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            },
+            "Hash_file_content": {
+                "inputs": {
+                    "body": "@triggerBody().$content",
+                    "function": {
+                        "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/sites/hackaton19/functions/HttpTrigger1"
+                    }
+                },
+                "runAfter": {
+                    "Optical_Character_Recognition_(OCR)_to_Text": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            },
+            "Hash_metadata": {
+                "inputs": {
+                    "body": {
+                        "id": "@triggerOutputs()['headers']['x-ms-file-id']",
+                        "name": "@triggerOutputs()['headers']['x-ms-file-name-encoded']",
+                        "path": "@triggerOutputs()['headers']['x-ms-file-path-encoded']",
+                        "tag": "@triggerOutputs()['headers']['x-ms-file-etag']"
+                    },
+                    "function": {
+                        "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/sites/hackaton19/functions/HttpTrigger1"
+                    }
+                },
+                "runAfter": {
+                    "Hash_detected_text": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            },
+            "Optical_Character_Recognition_(OCR)_to_Text": {
+                "inputs": {
+                    "body": "@triggerBody()",
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['cognitiveservicescomputervision']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/vision/v2.0/ocrtext",
+                    "queries": {
+                        "detectOrientation": true,
+                        "format": "Image Content",
+                        "language": "unk"
+                    }
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "When_a_file_is_created_in_a_folder": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['sharepointonline']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://innovateit.sharepoint.com/sites/Audit'))}/triggers/onnewfile",
+                    "queries": {
+                        "folderId": "%252fTracked%2bPictures",
+                        "inferContentType": true,
+                        "queryParametersSingleEncoded": true
+                    }
+                },
+                "metadata": {
+                    "%252fTracked%2bPictures": "/Tracked Pictures"
+                },
+                "recurrence": {
+                    "frequency": "Minute",
+                    "interval": 3
+                },
+                "type": "ApiConnection"
+            }
+        }
+    }
+}

@@ -1,0 +1,126 @@
+{
+    "$connections": {
+        "value": {
+            "blockchainethereum": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/blockchainethereum-1",
+                "connectionName": "blockchainethereum-1",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/blockchainethereum"
+            },
+            "excelonlinebusiness": {
+                "connectionId": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/resourceGroups/hackaton19/providers/Microsoft.Web/connections/excelonlinebusiness",
+                "connectionName": "excelonlinebusiness",
+                "id": "/subscriptions/1351f53f-23e6-41d5-9615-fc64f09dc660/providers/Microsoft.Web/locations/westeurope/managedApis/excelonlinebusiness"
+            }
+        }
+    },
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Add_a_row_into_a_table": {
+                "inputs": {
+                    "body": {
+                        "Amount": "@triggerBody()?['totalAmount']",
+                        "Category": "@triggerBody()?['category']"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['excelonlinebusiness']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/codeless/v1.2/drives/@{encodeURIComponent('b!3listhgpcU2sRfm7MLHsVxSuTzPiE8lJqOoYjSvAfFJaVN6XlFSrQq1QUJLKxR8O')}/items/@{encodeURIComponent('016CGRWJUHM725HQLD7BBLB7RFSLJTR2F5')}/workbook/tables/@{encodeURIComponent('{0953B7FC-62A7-4C8C-B1EE-94B75A5BF1E0}')}/rows",
+                    "queries": {
+                        "source": "groups/d568dbd4-b7cf-4df9-b26d-e40eda491190"
+                    }
+                },
+                "metadata": {
+                    "016CGRWJUHM725HQLD7BBLB7RFSLJTR2F5": "/Summary.xlsx"
+                },
+                "runAfter": {
+                    "Get_a_row_2": [
+                        "Failed"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Get_a_row_2": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['excelonlinebusiness']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/drives/@{encodeURIComponent('b!3listhgpcU2sRfm7MLHsVxSuTzPiE8lJqOoYjSvAfFJaVN6XlFSrQq1QUJLKxR8O')}/files/@{encodeURIComponent('016CGRWJUHM725HQLD7BBLB7RFSLJTR2F5')}/tables/@{encodeURIComponent('{0953B7FC-62A7-4C8C-B1EE-94B75A5BF1E0}')}/items/@{encodeURIComponent(encodeURIComponent(triggerBody()?['category']))}",
+                    "queries": {
+                        "idColumn": "Category",
+                        "source": "groups/d568dbd4-b7cf-4df9-b26d-e40eda491190"
+                    }
+                },
+                "metadata": {
+                    "016CGRWJUHM725HQLD7BBLB7RFSLJTR2F5": "/Summary.xlsx"
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
+            },
+            "Update_a_row": {
+                "inputs": {
+                    "body": {
+                        "Amount": "@triggerBody()?['totalAmount']"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['excelonlinebusiness']['connectionId']"
+                        }
+                    },
+                    "method": "patch",
+                    "path": "/drives/@{encodeURIComponent('b!3listhgpcU2sRfm7MLHsVxSuTzPiE8lJqOoYjSvAfFJaVN6XlFSrQq1QUJLKxR8O')}/files/@{encodeURIComponent('016CGRWJUHM725HQLD7BBLB7RFSLJTR2F5')}/tables/@{encodeURIComponent('{0953B7FC-62A7-4C8C-B1EE-94B75A5BF1E0}')}/items/@{encodeURIComponent(encodeURIComponent(body('Get_a_row_2')?['Category']))}",
+                    "queries": {
+                        "idColumn": "Category",
+                        "source": "groups/d568dbd4-b7cf-4df9-b26d-e40eda491190"
+                    }
+                },
+                "metadata": {
+                    "016CGRWJUHM725HQLD7BBLB7RFSLJTR2F5": "/Summary.xlsx"
+                },
+                "runAfter": {
+                    "Get_a_row_2": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "When_a_smart_contract_event_occurs": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['blockchainethereum']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/contract/OnNewEvent",
+                    "queries": {
+                        "abi": "[\n\t{\n\t\t\"constant\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"date\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"amount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"addExpenseLog\",\n\t\t\"outputs\": [],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"nonpayable\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"anonymous\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"expenseLogId\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"date\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"amount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"ExpenseLogAdded\",\n\t\t\"type\": \"event\"\n\t},\n\t{\n\t\t\"anonymous\": false,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"indexed\": false,\n\t\t\t\t\"name\": \"totalAmount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"ExpenseTotalsUpdated\",\n\t\t\"type\": \"event\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"ExpenseLogs\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"Id\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"CategoryHash\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"Date\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"name\": \"Amount\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [],\n\t\t\"name\": \"getCount\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"category\",\n\t\t\t\t\"type\": \"string\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"getTotalAmount\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t},\n\t{\n\t\t\"constant\": true,\n\t\t\"inputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"bytes32\"\n\t\t\t}\n\t\t],\n\t\t\"name\": \"Totals\",\n\t\t\"outputs\": [\n\t\t\t{\n\t\t\t\t\"name\": \"\",\n\t\t\t\t\"type\": \"uint256\"\n\t\t\t}\n\t\t],\n\t\t\"payable\": false,\n\t\t\"stateMutability\": \"view\",\n\t\t\"type\": \"function\"\n\t}\n]",
+                        "contractAddress": "0xc410b7015af5e562e5108c2ab2bd03de48f272b7",
+                        "eventName": "ExpenseTotalsUpdated"
+                    }
+                },
+                "recurrence": {
+                    "frequency": "Minute",
+                    "interval": 3
+                },
+                "type": "ApiConnection"
+            }
+        }
+    }
+}
